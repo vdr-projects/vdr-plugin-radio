@@ -660,7 +660,14 @@ eOSState cRadioTextOsd::ProcessKey(eKeys Key) {
     // check end @ replay
     if (RT_Replay) {
         int rplayCur, rplayTot;
+#if APIVERSNUM > 20402
+       {
+            cMutexLock ControlMutexLock;
+            cControl::Control(ControlMutexLock)->GetIndex(rplayCur, rplayTot, false);
+       }
+#else
         cControl::Control()->GetIndex(rplayCur, rplayTot, false);
+#endif
         if (rplayCur >= rplayTot - 1) {
             Hide();
             return osEnd;
