@@ -27,7 +27,7 @@
 #endif
 
 #ifndef GIT_REV
-static const char *VERSION = "1.1.0";
+static const char *VERSION = "2.0.0";
 #else
 static const char *VERSION = GIT_REV;
 #endif

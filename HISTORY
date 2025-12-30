@@ -1,5 +1,9 @@
 VDR Plugin 'radio' Revision History
 -----------------------------------
+2025-12-30: Version 2.0.0
+- Support for AAC-LATM (Helmut Binder)
+- Build fix for VDR 2.7.1 (Alexander Grothe)
+
 2018-07-15: Version 1.xx
             Ulrich Eckhardt  <uli-vdr@uli-eckhardt.de>
 - Better CRC check (should help on Harmony FM).
