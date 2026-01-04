@@ -17,6 +17,7 @@ private:
     bool imageShown;
     void Show (const char *file);
     void send_pes_packet(unsigned char *data, int len, int timestamp);
+    void send_still_picture(unsigned char *data, int len);
 protected:
     virtual void Action(void);
     void Stop(void);
