@@ -232,7 +232,6 @@ bool cPluginRadio::Start(void)
     radioImage = new cRadioImage;
     if (!radioImage)
         return false;
-    radioImage->Init();
 
     radioAudio = new cRadioAudio;
     if (!radioAudio)
@@ -425,6 +424,12 @@ void cPluginRadio::ChannelSwitch(const cDevice *Device, int ChannelNumber, bool 
         return;
     }
 
+    // stop background image thread, before the channel should be switched
+    if (ChannelNumber == 0 && radioImage->Active()) {
+        radioImage->Stop();
+        return;
+    }
+
     char *image;
     if (cDevice::CurrentChannel() == ChannelNumber) {
 #if VDRVERSNUM >= 20300
@@ -434,6 +439,8 @@ void cPluginRadio::ChannelSwitch(const cDevice *Device, int ChannelNumber, bool 
         chan = ChannelNumber ? Channels.GetByNumber(ChannelNumber) : NULL;
 #endif
         if (chan != NULL && chan->Vpid() == 0 && chan->Apid(0) > 0) {
+            // start background image thread, if the channel is a radio channel
+            radioImage->Init();
             asprintf(&image, "%s/%s.mpg", ConfigDir, chan->Name());
             if (!file_exists(image)) {
                 dsyslog("radio: channel-image not found '%s' (Channelname= %s)", image, chan->Name());
@@ -461,6 +468,12 @@ void cPluginRadio::Replaying(const cControl *Control, const char *Name, const ch
     radioAudio->DisableRadioTextProcessing();
 
     if (S_Activate == false) {
+        return;
+    }
+
+    // stop background image thread, if replay is stopped
+    if (!On && radioImage->Active()) {
+        radioImage->Stop();
         return;
     }
 
@@ -499,6 +512,7 @@ void cPluginRadio::Replaying(const cControl *Control, const char *Name, const ch
             dsyslog("radio: replay-image not found '%s'", ReplayFile);
         }
         else {
+            radioImage->Init();
             radioImage->SetBackgroundImage(ReplayFile);
         }
         radioAudio->EnableRadioTextProcessing(Name, 0, true);

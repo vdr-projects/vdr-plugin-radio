@@ -20,11 +20,11 @@ private:
     void send_still_picture(unsigned char *data, int len);
 protected:
     virtual void Action(void);
-    void Stop(void);
 public:
     cRadioImage(void);
     virtual ~cRadioImage();
     static void Init(void);
+    void Stop(void);
     static void Exit(void);
     void SetBackgroundImage(const char *Image);
 };

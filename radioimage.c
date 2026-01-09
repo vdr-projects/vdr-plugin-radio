@@ -43,11 +43,16 @@ void cRadioImage::Action(void) {
     if ((S_Verbose & 0x0f) >= 2)
         printf("vdr-radio: image-showing starts\n");
 
+    int count = 0;
     while (Running()) {
-        cCondWait::SleepMs(333);
-        if (IsRadioOrReplay && imagepath && !imageShown) {
-            imageShown = true;
-            Show(imagepath);
+        cCondWait::SleepMs(20);
+        count++;
+        if (count % 15 == 0) {
+            count = 0;
+            if (IsRadioOrReplay && imagepath && !imageShown) {
+                imageShown = true;
+                Show(imagepath);
+            }
         }
     }
 
